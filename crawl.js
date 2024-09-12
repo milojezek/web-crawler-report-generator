@@ -12,10 +12,26 @@ const normalizeURL = (url) => {
 	return hostAndPath.replace(/www\./, "").replace(/\/$/, "");
 };
 
+/**
+ * Extract URLs from the HTML body
+ * @param htmlBody the HTML body to extract URLs from
+ * @param baseURL the base URL to filter the URLs
+ * @returns the list of URLs extracted from the HTML body that are under the base URL
+ */
 const getURLsFromHTML = (htmlBody, baseURL) => {
 	const dom = new JSDOM(htmlBody);
+
+	const normalizedBaseUrl = normalizeURL(baseURL);
 	const anchors = dom.window.document.querySelectorAll("a");
-	return [...anchors];
+
+	const urls = Array.from(anchors)
+		.map((a) => a.href)
+		.filter((href) => {
+			const normalizedHref = normalizeURL(href);
+			return normalizedHref.startsWith(normalizedBaseUrl);
+		});
+
+	return [...urls];
 };
 
 export { normalizeURL, getURLsFromHTML };
