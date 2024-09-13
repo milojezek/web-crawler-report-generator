@@ -34,26 +34,38 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
 	return [...urls];
 };
 
+const fetchHtml = async (url) => {
+	let response;
+	try {
+		response = await fetch(url);
+	} catch (error) {
+		throw new Error(`Got network error: ${error.message}`);
+	}
+
+	const contentType = response.headers.get("content-type");
+	if (!contentType || !contentType.includes("text/html")) {
+		throw new Error(`Non-HTML response: ${contentType}`);
+	}
+
+	return response.text();
+};
+
 /**
  * Fetch and print the HTML content of the URL
  * @param url the URL to fetch and print the HTML content
  */
-const crawlPage = async (url) => {
+const crawlPage = async (baseUrl, currentUrl = baseUrl, pages = {}) => {
+	const baseUrlHostname = new URL(baseUrl).hostname;
+	const currentUrlHostname = new URL(currentUrl).hostname;
+
+	if (baseUrlHostname !== currentUrlHostname) {
+		return pages;
+	}
+
+	const normalizedCurrentUrl = normalizeURL(currentUrl);
+
 	try {
-		const response = await fetch(url);
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-
-		const isContentType = response.headers
-			.get("content-type")
-			.includes("text/html");
-		if (!isContentType) {
-			throw new Error("Not text/html");
-		}
-
-		const html = await response.text();
-		console.log(html);
+		console.log(fetchHtml(currentUrl));
 	} catch (error) {
 		console.error(error.message);
 	}
