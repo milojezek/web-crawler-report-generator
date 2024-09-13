@@ -1,4 +1,5 @@
 import { argv } from "node:process";
+import { crawlPage } from "./crawl.js";
 
 /**
  * Main function that process the CLI arguments
@@ -11,7 +12,7 @@ const main = () => {
 	} else if (cliCommands.length > 1) {
 		console.error("Too many CLI arguments");
 	} else {
-		console.log(cliCommands[0]);
+		crawlPage(cliCommands);
 	}
 };
 

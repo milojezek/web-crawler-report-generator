@@ -34,4 +34,29 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
 	return [...urls];
 };
 
-export { normalizeURL, getURLsFromHTML };
+/**
+ * Fetch and print the HTML content of the URL
+ * @param url the URL to fetch and print the HTML content
+ */
+const crawlPage = async (url) => {
+	try {
+		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
+
+		const isContentType = response.headers
+			.get("content-type")
+			.includes("text/html");
+		if (!isContentType) {
+			throw new Error("Not text/html");
+		}
+
+		const html = await response.text();
+		console.log(html);
+	} catch (error) {
+		console.error(error.message);
+	}
+};
+
+export { normalizeURL, getURLsFromHTML, crawlPage };
