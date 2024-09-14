@@ -14,26 +14,37 @@ const normalizeURL = (url) => {
 
 /**
  * Extract URLs from the HTML body
- * @param htmlBody the HTML body to extract URLs from
- * @param baseURL the base URL to filter the URLs
+ * @param html the HTML body to extract URLs from
+ * @param baseUrl the base URL to filter the URLs
  * @returns the list of URLs extracted from the HTML body that are under the base URL
  */
-const getURLsFromHTML = (htmlBody, baseURL) => {
-	const dom = new JSDOM(htmlBody);
-
-	const normalizedBaseUrl = normalizeURL(baseURL);
+function getURLsFromHTML(html, baseUrl) {
+	const urls = [];
+	const dom = new JSDOM(html);
 	const anchors = dom.window.document.querySelectorAll("a");
 
-	const urls = Array.from(anchors)
-		.map((a) => a.href)
-		.filter((href) => {
-			const normalizedHref = normalizeURL(href);
-			return normalizedHref.startsWith(normalizedBaseUrl);
-		});
+	for (const anchor of anchors) {
+		if (anchor.hasAttribute("href")) {
+			let href = anchor.getAttribute("href");
 
-	return [...urls];
-};
+			try {
+				// convert any relative URLs to absolute URLs
+				href = new URL(href, baseUrl).href;
+				urls.push(href);
+			} catch (err) {
+				console.log(`${err.message}: ${href}`);
+			}
+		}
+	}
 
+	return urls;
+}
+
+/**
+ * Fetch the HTML content of the URL
+ * @param url the URL to fetch the HTML content
+ * @returns the HTML content of the URL as a string
+ */
 const fetchHtml = async (url) => {
 	let response;
 	try {
@@ -51,24 +62,52 @@ const fetchHtml = async (url) => {
 };
 
 /**
- * Fetch and print the HTML content of the URL
- * @param url the URL to fetch and print the HTML content
+ * Crawl the pages starting from the base URL
+ * @param baseUrl the base URL to start crawling from
+ * @param currentUrl the current URL to crawl (default to the base URL)
+ * @param initPages the initial pages map (default to an empty object)
+ * @returns the pages map with the count of each page visited
  */
-const crawlPage = async (baseUrl, currentUrl = baseUrl, pages = {}) => {
-	const baseUrlHostname = new URL(baseUrl).hostname;
-	const currentUrlHostname = new URL(currentUrl).hostname;
+const crawlPage = async (baseUrl, currentUrl = baseUrl, initPages = {}) => {
+	let pages = initPages;
 
-	if (baseUrlHostname !== currentUrlHostname) {
+	const baseUrlObj = new URL(baseUrl);
+	const currentUrlObj = new URL(currentUrl);
+
+	// should crawl only pages on the same domain
+	if (baseUrlObj.hostname !== currentUrlObj.hostname) {
 		return pages;
 	}
 
-	const normalizedCurrentUrl = normalizeURL(currentUrl);
+	// consistent url format
+	const normalizedUrl = normalizeURL(currentUrl);
 
+	// if the page was already visited
+	// increase the count and don't repeat the request
+	if (pages[normalizedUrl] > 0) {
+		pages[normalizeURL]++;
+		return pages;
+	}
+
+	// otherwise initialize the current page in the map
+	pages[normalizedUrl] = 1;
+
+	console.log(`Crawling ${currentUrl}...`);
+	let html = "";
 	try {
-		console.log(fetchHtml(currentUrl));
+		html = await fetchHtml(currentUrl);
 	} catch (error) {
 		console.error(error.message);
+		return pages;
 	}
+
+	// recur through the links on the page
+	const otherUrls = getURLsFromHTML(html, baseUrl);
+	for (const nextUrl of otherUrls) {
+		pages = await crawlPage(baseUrl, nextUrl, pages);
+	}
+
+	return pages;
 };
 
 export { normalizeURL, getURLsFromHTML, crawlPage };
