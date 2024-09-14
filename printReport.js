@@ -3,11 +3,16 @@
  * @param pages the pages map to print
  */
 const printReport = (pages) => {
+	console.log("===========================");
 	console.log("Here's the report...");
+	console.log("===========================");
 	const sortedPages = sortPages(pages);
 	for (const page of sortedPages) {
 		const url = page[0];
 		const count = page[1];
+		if (Number.isNaN(count)) {
+			continue;
+		}
 		console.log(`Found ${count} internal links to ${url}`);
 	}
 };
