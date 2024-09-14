@@ -1,5 +1,6 @@
 import { argv } from "node:process";
 import { crawlPage } from "./crawl.js";
+import { printReport } from "./printReport.js";
 
 /**
  * Main function that process the CLI arguments
@@ -21,7 +22,8 @@ const main = async () => {
 	console.log(`Starting crawl of: ${baseUrl}`);
 
 	const pages = await crawlPage(cliCommands[0]);
-	console.log(pages);
+
+	printReport(pages);
 };
 
 main();
