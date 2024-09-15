@@ -28,9 +28,11 @@ function getURLsFromHTML(html, baseUrl) {
 			let href = anchor.getAttribute("href");
 
 			try {
-				// convert any relative URLs to absolute URLs
-				href = new URL(href, baseUrl).href;
-				urls.push(href);
+				if (href.startsWith(baseUrl)) {
+					// convert any relative URLs to absolute URLs
+					href = new URL(href, baseUrl).href;
+					urls.push(href);
+				}
 			} catch (err) {
 				console.log(`${err.message}: ${href}`);
 			}
