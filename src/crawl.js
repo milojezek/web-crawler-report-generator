@@ -28,9 +28,12 @@ function getUrlsFromHtml(html, baseUrl) {
 			let href = anchor.getAttribute("href");
 
 			try {
-				if (href.startsWith(baseUrl)) {
-					// convert any relative URLs to absolute URLs
-					href = new URL(href, baseUrl).href;
+				// convert any relative URLs to absolute URLs
+				href = new URL(href, baseUrl).href;
+
+				// check if the URL has the same base URL
+				const hrefUrlObj = new URL(href);
+				if (hrefUrlObj.hostname === new URL(baseUrl).hostname) {
 					urls.push(href);
 				}
 			} catch (err) {
