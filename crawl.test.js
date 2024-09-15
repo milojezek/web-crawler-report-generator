@@ -1,5 +1,5 @@
 import { test, expect } from "@jest/globals";
-import { normalizeURL, getURLsFromHTML } from "./crawl.js";
+import { normalizeURL, getUrlsFromHtml } from "./crawl.js";
 
 test("Normalize URL: https://blog.boot.dev/path/", () => {
 	expect(normalizeURL("https://blog.boot.dev/path/")).toBe(
@@ -31,7 +31,7 @@ test("Get URL from HTML", () => {
           <a href="https://blog.boot.dev/article/01"><span>Go to Boot.dev</span></a>
       </body>
     </html>`;
-	expect(getURLsFromHTML(htmlBody, "https://blog.boot.dev/")).toEqual([
+	expect(getUrlsFromHtml(htmlBody, "https://blog.boot.dev/")).toEqual([
 		"https://blog.boot.dev/lesson/022",
 		"https://blog.boot.dev/article/01",
 	]);

@@ -18,7 +18,7 @@ const normalizeURL = (url) => {
  * @param baseUrl the base URL to filter the URLs
  * @returns the list of URLs extracted from the HTML body that are under the base URL
  */
-function getURLsFromHTML(html, baseUrl) {
+function getUrlsFromHtml(html, baseUrl) {
 	const urls = [];
 	const dom = new JSDOM(html);
 	const anchors = dom.window.document.querySelectorAll("a");
@@ -104,7 +104,7 @@ const crawlPage = async (baseUrl, currentUrl = baseUrl, initPages = {}) => {
 	}
 
 	// recur through the links on the page
-	const otherUrls = getURLsFromHTML(html, baseUrl);
+	const otherUrls = getUrlsFromHtml(html, baseUrl);
 	for (const nextUrl of otherUrls) {
 		pages = await crawlPage(baseUrl, nextUrl, pages);
 	}
@@ -112,4 +112,4 @@ const crawlPage = async (baseUrl, currentUrl = baseUrl, initPages = {}) => {
 	return pages;
 };
 
-export { normalizeURL, getURLsFromHTML, crawlPage };
+export { normalizeURL, getUrlsFromHtml, crawlPage };
