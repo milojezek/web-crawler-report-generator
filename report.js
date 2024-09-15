@@ -17,8 +17,6 @@ const printReport = (pages) => {
 	}
 };
 
-export { printReport };
-
 /**
  * Sort the pages by count and then by URL
  * @param pages the pages map to sort
@@ -39,3 +37,5 @@ const sortPages = (pages) => {
 
 	return pagesArr;
 };
+
+export { printReport, sortPages };
