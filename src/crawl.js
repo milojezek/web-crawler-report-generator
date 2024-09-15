@@ -94,7 +94,7 @@ const crawlPage = async (baseUrl, currentUrl = baseUrl, initPages = {}) => {
 	// if the page was already visited
 	// increase the count and don't repeat the request
 	if (pages[normalizedUrl] > 0) {
-		pages[normalizeURL]++;
+		pages[normalizedUrl]++;
 		return pages;
 	}
 
