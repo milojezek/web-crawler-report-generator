@@ -1,4 +1,4 @@
-import { sortPages } from "./report.js";
+import { sortPages } from "../src/report.js";
 
 describe("sortPages", () => {
 	test("Sorts pages by visit count in descending order", () => {

@@ -1,5 +1,5 @@
 import { test, expect } from "@jest/globals";
-import { normalizeURL, getUrlsFromHtml } from "./crawl.js";
+import { normalizeURL, getUrlsFromHtml } from "../src/crawl.js";
 
 test("Normalize URL: https://blog.boot.dev/path/", () => {
 	expect(normalizeURL("https://blog.boot.dev/path/")).toBe(

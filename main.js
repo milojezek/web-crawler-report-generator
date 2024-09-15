@@ -1,6 +1,6 @@
 import { argv } from "node:process";
-import { crawlPage } from "./crawl.js";
-import { printReport } from "./report.js";
+import { crawlPage } from "./src/crawl.js";
+import { printReport } from "./src/report.js";
 
 /**
  * Main function that process the CLI arguments
