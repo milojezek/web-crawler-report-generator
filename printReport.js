@@ -27,12 +27,14 @@ export { printReport };
 const sortPages = (pages) => {
 	// inner array: [url, count]
 	const pagesArr = Object.entries(pages);
-	pagesArr.sort((pageA, pageB) => {
-		if (pageB[1] === pageA[1]) {
-			return pageA[0].localeCompare(pageB[0]);
+	pagesArr.sort((firstPage, secondPage) => {
+		// if counts are equal, sort by URL alphabetically
+		if (secondPage[1] === firstPage[1]) {
+			return firstPage[0].localeCompare(secondPage[0]);
 		}
 
-		return pageB[1] - pageA[1];
+		// sort by count in descending order
+		return secondPage[1] - firstPage[1];
 	});
 
 	return pagesArr;
