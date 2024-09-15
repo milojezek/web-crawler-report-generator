@@ -2,7 +2,10 @@ import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 
 /**
- * Remove trailing slash(es) from the URL
+ * Normalizes the given URL by:
+ * - Taking hostname and pathname
+ * - Removing wwww prefix if it exists
+ * - Removign any trailing slashes
  * @param url the URL to normalize
  * @returns the normalized URL
  */
@@ -58,6 +61,7 @@ const fetchHtml = async (url) => {
 		throw new Error(`Got network error: ${error.message}`);
 	}
 
+	// Check the content type
 	const contentType = response.headers.get("content-type");
 	if (!contentType || !contentType.includes("text/html")) {
 		throw new Error(`Non-HTML response: ${contentType}`);

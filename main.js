@@ -3,7 +3,17 @@ import { crawlPage } from "./src/crawl.js";
 import { printReport } from "./src/report.js";
 
 /**
- * Main function that process the CLI arguments
+ * Main function that processes the CLI arguments
+ * and initiates the web crawling process.
+ *
+ * This function expects exactly one CLI argument,
+ * which should be the base URL of the website to crawl.
+ *
+ * If no argument or more than one argument is provided,
+ * it logs an error message and exits.
+ *
+ * The function starts the crawling process for the provided base URL
+ * and prints a report of the crawled pages.
  */
 const main = async () => {
 	const cliCommands = argv.slice(2);
